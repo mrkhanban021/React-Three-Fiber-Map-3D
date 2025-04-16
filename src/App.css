@@ -1,0 +1,119 @@
+.canva{
+    border: 1px solid;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 95vh;
+
+}
+
+.web3{
+    border: 1px solid gray;
+    width: 80%;
+    min-height: 50vh;
+    margin: 15px;
+    border-radius: 5px;
+}
+.web3 canvas{
+    background-color: blueviolet;
+    height: 400px;
+    
+}
+
+.control{
+    width: 80%;
+    display: flex;
+    border: 1px solid gray;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px 0;
+
+    
+}
+
+.select{
+    width: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.select select{
+    width: 100%;
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    outline: none;
+}
+
+
+.add_engin{
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    row-gap: 10px;
+}
+
+.add_engin input{
+    padding: 8px;
+    width: 250px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    outline: none;
+}
+
+.add_engin input:focus{
+    border-color: rgb(116, 118, 230); 
+}
+.add_engin button{
+    padding: 8px 15px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    background-color: rgb(56, 18, 91);
+    color: aliceblue;
+    cursor: pointer;
+}
+
+.btn{
+    display: flex;
+    column-gap: 10px;
+
+}
+
+.btn button{
+    padding: 7px 19px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+}
+
+.btn1{
+    background-color: green;
+    color: aliceblue;
+    transition: 0.3s;
+}
+.btn1:active{
+    transform: scale(0.9);
+}
+.btn2{
+    background-color: #3535e3;
+    color: aliceblue;
+}
+.btn3{
+    background-color: red;
+    color: aliceblue;
+    transition: 0.3s;
+}
+.btn3:active{
+    transform: scale(0.9);
+}
+
+@media screen and (max-width:450px ){
+    .control{
+        flex-direction: column;
+    }
+}
