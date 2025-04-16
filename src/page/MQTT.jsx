@@ -1,13 +1,49 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 
 import React, { useState, useEffect } from "react";
 import mqtt from "mqtt";
+import { toast } from "react-toastify";
 
-const MQTTMessenger = () => {
-  const [message, setMessage] = useState("");
+const MQTTMessenger = ({engineCount, speed, movement, direct, engin, onDataReceive}) => {
   const [client, setClient] = useState(null);
+  const [motors, setMotors] = useState([]);
+  const [data, setData] = useState(null)
+
+  useEffect(()=>{
+    if(engineCount > 0){
+      const initialMotors = Array.from({length : engineCount}, (_, index)=>({
+        id: index +1,
+        movement: movement,
+        speed: 0,
+        direction : "forward"
+      }));
+      setMotors(initialMotors);
+    }
+    
+  },[engineCount]);
+  
+  
+  useEffect(()=>{
+    if(engin !== null && motors[engin] !== undefined){
+      setMotors((prevMotors)=>{
+        const updtaeMotors = [...prevMotors];
+        updtaeMotors[engin] = {
+          ...updtaeMotors[engin],
+          movement: movement,
+          speed: speed,
+          direction : direct
+        }
+        return updtaeMotors;
+      });
+    }
+  },[engin, movement,speed,direct]);
+
+
+
 
   useEffect(() => {
+
     const options = {
         clientId: "react_client_" + Math.random().toString(16).substr(2, 8),
       username: "asr",
@@ -18,60 +54,60 @@ const MQTTMessenger = () => {
     const mqttClient = mqtt.connect("ws://192.168.1.90:9001", options);
 
     mqttClient.on("connect", () => {
-      console.log("✅ متصل شد به Mosquitto");
+      toast.success("Conncted Mosquitto");
+      mqttClient.subscribe("my/topic", (err)=>{
+        if(err){
+          toast.error("error");
+        } else{
+          toast.success(" Subscribed to topic: my/topic");
+        }
+      })
+    });
+
+    mqttClient.on("message", (topic , message)=>{
+        const parsData = JSON.parse(message.toString());
+        setData(parsData)
+     
     });
 
     mqttClient.on("error", (err) => {
-      console.error("❌ خطا در اتصال:", err);
+      toast.error("❌", err);
     });
-
     setClient(mqttClient);
 
     return () => {
       mqttClient.end();
     };
+  
   }, []);
 
-  const handleSend = () => {
-    if (client && message) {
-      client.publish("my/topic", message, { qos: 0 });
-      
-      setMessage("");
+
+  useEffect(()=>{
+
+   
+    if(data && onDataReceive){
+      onDataReceive(data)
     }
-  };
+  },[data])
+
+
+
+
+  useEffect(()=>{
+
+    
+    if(client && motors.length > 0){
+      const messageToSend = JSON.stringify(motors)
+      client.publish(`my/topic`, messageToSend, { qos: 0 });
+    }
+
+  },[motors, client])
+
 
   return (
-    <div style={{ maxWidth: "400px", margin: "2rem auto", textAlign: "center" }}>
-      <h2>ارسال پیام با MQTT</h2>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="متن پیام"
-        style={{
-          padding: "10px",
-          width: "80%",
-          marginBottom: "1rem",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-        }}
-      />
-      <br />
-      <button
-        onClick={handleSend}
-        style={{
-          padding: "10px 20px",
-          borderRadius: "8px",
-          backgroundColor: "#4CAF50",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        ارسال
-      </button>
-    </div>
-  );
+    <>
+    </>
+  )
 };
 
 export default MQTTMessenger;

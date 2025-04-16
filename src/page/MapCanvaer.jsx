@@ -8,12 +8,13 @@ import * as THREE from "three";
 
 
 
-export default function MapCanvaer({engineCount, speed, start, direct, engin , stop}) {
+export default function MapCanvaer({engineCount, speed, start, direct, engin , stop, len}) {
 
   
 
   const [initialPosition, setInitialPosition] = useState(null);
   const [clones, setClones] = useState([]);
+ 
   
 
   const model = useGLTF("/Canvaer.glb",);
@@ -26,20 +27,6 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
     camera.position.set(7, 5, 0);
   }, [camera]);
 
-
-  // useEffect(()=>{
-  //   const action = aimation.actions[aimation.names[0]];
-    
-  //   !direct ? action.timeScale = speed / 10 : action.timeScale = -speed /10;
-  //   if(engin == 0){
-  //     if(start === true){
-  //       action.play();
-  //       action.paused = false
-  //     }else{
-  //       action.paused = true
-  //     }
-  //   }
-  // },[start, speed, direct]);
 
 
 
@@ -59,7 +46,7 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
 
     const newClons = [];
 
-    for(let i = 0; i < engineCount ; i++){
+    for(let i = 0; i < engineCount || i < len; i++){
       const clonEngin = clone(engins);
       clonEngin.position.copy(initialPosition.position);
       clonEngin.rotation.copy(initialPosition.rotation);
@@ -90,7 +77,7 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
       })
     };
 
-  },[engineCount]);
+  },[engineCount, len]);
 
   useFrame((state, delta)=>{
     clones.forEach(({mixer})=>{
@@ -106,7 +93,7 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
     
     if(Array.isArray(selected.actions)){
       selected.actions.forEach((action)=>{
-        if(!direct == true){
+        if(!direct == false){
           action.timeScale = speed /10;
         }else{
           action.timeScale = -speed /10;
@@ -116,10 +103,12 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
 
         if(start === true){
           action.play();
-          action.paused = false
+          action.paused = false;
+          
         }
         if(stop === true ){
           action.paused = true;
+          
         };
 
       });
@@ -134,8 +123,11 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
         clone.object.scale.copy(clone.object.scale);
       };
     });
+    
 
   },[start, speed, direct , stop]);
+
+
 
 
 

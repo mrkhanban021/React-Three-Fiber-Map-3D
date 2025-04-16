@@ -1,0 +1,62 @@
+.Table{
+    width: 80%;
+    border-collapse: separate; 
+    border-spacing: 0; 
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    border-radius: 10px; 
+    overflow: hidden; 
+    margin-top: 15px;
+    
+    
+}
+.Table thead{
+    background-color: #2e70c2; 
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    th {
+        border: none; 
+        text-align: center;
+    }
+    
+}
+.Table tbody{
+    tr {
+        transition: background-color 0.3s ease; 
+    }
+
+    tr:hover {
+        background-color: #f9f9f9; 
+    }
+
+    td {
+        padding: 5px 15px; 
+        border-bottom: 1px solid #ddd; 
+        text-align: center;
+        font-size: 14px;
+        color: #333;
+    }
+
+    
+}
+
+@media screen and (max-width: 450px) {
+    .Table {
+        width: 100%;
+        font-size: 12px; /* کاهش اندازه فونت */
+        border-radius: 0; /* حذف شعاع گوشه‌ها */
+        overflow-x: auto; 
+    }
+
+    .Table thead th,
+    .Table tbody td {
+        padding: 5px 10px; /* کاهش فاصله داخلی */
+    }
+
+    .Table tbody td {
+        white-space: nowrap; /* جلوگیری از شکستن متن */
+    }
+}
+

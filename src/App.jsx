@@ -3,22 +3,29 @@ import { useState,useEffect } from "react";
 import "./App.css";
 import MapCanvaer from "./page/MapCanvaer";
 import MQTTMessenger from "./page/MQTT";
+import Table from "./page/Table";
+
 
 function App() {
 
   const [engineCount, setEngineCount] = useState(0);
-  const [speed , setSpeed] = useState(1);
+  const [speed , setSpeed] = useState(0);
   const [start, setStart] = useState(false);
   const [stop, setStop] = useState(false);
-  const [direct , setDirect] = useState(false);
+  const [direct , setDirect] = useState(true);
   const [engin , setEngin] = useState(null);
+  const [movement , setMovement] = useState(null);
+  const [mqttData, setMqttData] = useState(null);
+  const [len , setLen] = useState()
  
-  console.log(start , stop);
 
-
+  
+ 
+ 
   useEffect(()=>{
     setStop(false);
-    setStart(false)
+    setStart(false);
+    setMovement(null);
   },[engin])
 
 
@@ -29,13 +36,28 @@ function App() {
     setEngineCount(isNaN(value) ? 0 : value);
   };
 
+  const handleMqttData = (data) => {
+    setMqttData(data);
+  };
+ 
+  useEffect(()=>{
+    if(mqttData){
+      setLen(mqttData.length)
+    }else{
+      setLen()
+    }
+    
+
+  },[mqttData])
+  
+
 
   return (
     <>
       <div className="canva">
         <div className="web3">
           <Canvas>
-            <MapCanvaer engineCount={engineCount} speed={speed} start={start} direct={direct} engin={engin} stop={stop} />
+            <MapCanvaer engineCount={engineCount} speed={speed} start={start} direct={direct} engin={engin} stop={stop} len={len} />
           </Canvas>
         </div>
 
@@ -44,8 +66,7 @@ function App() {
           <div className="select" onChange={(e)=>{setEngin(e.target.value)}}>
             <select name="" id="">
               <option hidden>Engin</option>
-              {/* <option value={0}>Engin 1</option> */}
-              {Array.from({length : engineCount}, (_,i) =>(
+              {Array.from({length : engineCount || len}, (_,i) =>(
                 <option key={i} value={i}>
                   Engin {i+1}
                 </option>
@@ -59,21 +80,23 @@ function App() {
           </div>
 
           <div>
-            <input type="range" min={1} max={6} value={speed} onChange={(e)=>{setSpeed(e.target.value)}}/>
+            <input type="range" min={0} max={6} value={speed} onChange={(e)=>{setSpeed(e.target.value)}}/>
             <p>Speed <span>{speed}</span></p>
           </div>
 
           <div className="btn">
-            <button className="btn1" onClick={()=>{setStart(true); setStop(false)}}>start</button>
-            <button className="btn3" onClick={()=>{setStop(true); setStart(false)}}>Stop</button>
+            <button className="btn1" onClick={()=>{setStart(true); setStop(false); setMovement(true)}}>start</button>
+            <button className="btn3" onClick={()=>{setStop(true); setStart(false); setMovement(false)}}>Stop</button>
             <button className="btn2" onClick={()=>{setDirect(!direct)}}>{direct? "Right" : "Left"}</button>
           </div>
         </div>
+        <Table mqttData={mqttData || []} />
       </div>
 
       <div>
-        <MQTTMessenger/>
+        <MQTTMessenger engineCount={engineCount} speed={speed} direct={direct} engin={engin} movement = {movement} start={start} stop={stop} onDataReceive={handleMqttData} />
       </div>
+      
     </>
   );
 }
