@@ -19,9 +19,26 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
 
   const model = useGLTF("/Canvaer.glb",);
   const engins = model.scene.children[1];
+
+
+  const flagA = model.scene.children[6];
+  const flagB = model.scene.children[7];
+  const flagC = model.scene.children[8];
+  const flagD = model.scene.children[3];
+  const flagE = model.scene.children[4];
+  const flagF = model.scene.children[5];
+  
+  
+
+
+
+
+
+
   engins.visible = false;
   const aimation = useAnimations(model.animations, model.scene);
   const { camera } = useThree();
+
 
   useEffect(() => {
     camera.position.set(7, 5, 0);
