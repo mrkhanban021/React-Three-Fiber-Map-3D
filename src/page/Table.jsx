@@ -25,7 +25,7 @@ export default function Table({mqttData}) {
               <td> {!motor.movement ? "start" : "stop"} </td>
               <td> {motor.speed} RPM </td>
               <td>{ !motor.direction ? "backward" : "forward"}</td>
-              <td>021 A </td>
+              <td>{motor.Current} A </td>
               <td>--</td>
               <td>--</td>
               <td>--</td>

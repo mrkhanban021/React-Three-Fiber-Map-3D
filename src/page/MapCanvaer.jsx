@@ -14,20 +14,22 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
 
   const [initialPosition, setInitialPosition] = useState(null);
   const [clones, setClones] = useState([]);
+  
  
   
 
   const model = useGLTF("/Canvaer.glb",);
-  const engins = model.scene.children[1];
-
-
-  const flagA = model.scene.children[6];
-  const flagB = model.scene.children[7];
-  const flagC = model.scene.children[8];
-  const flagD = model.scene.children[3];
-  const flagE = model.scene.children[4];
-  const flagF = model.scene.children[5];
+  const engins = model.scene.children[2];
   
+  
+  console.log(model);
+  
+  const sensorA = model.scene.children[3];
+  const sensorB = model.scene.children[4];
+  const sensorC = model.scene.children[5];
+  const sensorD = model.scene.children[6];
+  const sensorE = model.scene.children[7];
+  const sensorF = model.scene.children[8];
   
 
 
@@ -41,7 +43,7 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
 
 
   useEffect(() => {
-    camera.position.set(7, 5, 0);
+    camera.position.set(0, 30, 100);
   }, [camera]);
 
 
@@ -99,6 +101,7 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
   useFrame((state, delta)=>{
     clones.forEach(({mixer})=>{
       mixer.update(delta);
+      // console.log(delta);
     });
   });
 
@@ -107,13 +110,14 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
     if(engin == null || !clones[engin]) return;
 
     const selected = clones[engin];
+   
     
     if(Array.isArray(selected.actions)){
       selected.actions.forEach((action)=>{
         if(!direct == false){
-          action.timeScale = speed /10;
+          action.timeScale = speed ;
         }else{
-          action.timeScale = -speed /10;
+          action.timeScale = -speed ;
         };
 
      
@@ -121,12 +125,15 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
         if(start === true){
           action.play();
           action.paused = false;
+          console.log(clones[0].object.position);
           
         }
         if(stop === true ){
           action.paused = true;
           
         };
+
+      
 
       });
     };
@@ -142,7 +149,7 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
     });
     
 
-  },[start, speed, direct , stop]);
+  },[start, speed, direct , stop, engin]);
 
 
 
@@ -150,7 +157,7 @@ export default function MapCanvaer({engineCount, speed, start, direct, engin , s
 
   return (
     <>
-    <OrbitControls minDistance={5} maxDistance={20}/>
+    <OrbitControls/>
     <Stage
     adjustCamera = {false}
     >
